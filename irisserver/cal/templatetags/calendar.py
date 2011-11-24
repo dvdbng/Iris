@@ -38,8 +38,9 @@ def month_cal(year, month):
         cal_day['day'] = day
         cal_day['event'] = False
         for event in event_list:
-            if day >= event.start_date.date() and day <= event.end_date.date():
-                cal_day['event'] = True
+            if day == event.date:
+                cal_day['event'] = event 
+
         if day.month == month:
             cal_day['in_month'] = True
         else:

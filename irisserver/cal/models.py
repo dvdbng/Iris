@@ -34,6 +34,8 @@ class AlarmType(models.Model):
             "preptime_min":self.preptime_min,
             "preptime_max":self.preptime_max
         }
+    def __unicode__(self):
+        return self.name
 
 
 class Alarm(models.Model):
@@ -56,3 +58,14 @@ class Alarm(models.Model):
             "time":self.time,
             "type":self.type.pk
         }
+    def get_time(self):
+        if self.time:
+            return self.time
+        else:
+            return self.type.def_time
+
+    def __unicode__(self):
+        res = self.get_time().strftime("%H:%M")
+        if self.type:
+            res += " (%s)" % self.type
+        return res

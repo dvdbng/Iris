@@ -17,3 +17,13 @@
     background-color: #f00;
     border: 1px solid yellow;
 }
+
+.cal_day.not_in_month{
+    border: 1px solid #ccc;
+    background: #fff;
+    color: #ccc;
+}
+
+h2{
+    text-align: center;
+}
