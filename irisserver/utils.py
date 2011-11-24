@@ -1,4 +1,6 @@
 from django.http import HttpResponse, Http404
+from django.template import RequestContext
+from django.shortcuts import render_to_response
 import json
 
 def jsonview(view):
@@ -22,3 +24,12 @@ def jsonview(view):
         return httpres
 
     return __inner__
+
+
+def irisview(view):
+    filename = "%s.html" % view.__name__
+    def __inner__(request):
+        ctx = view(request)
+        return render_to_response(filename,context_instance=RequestContext(request,ctx))
+    return __inner__
+

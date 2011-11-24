@@ -1,0 +1,19 @@
+.cal_month{
+    margin: 0 auto;
+}
+
+.cal_day{
+    width:70px;
+    height: 70px;
+    vertical-align: center;
+    text-align: center;
+
+    background-color: #c585ff;
+    cursor: pointer;
+
+}
+
+.cal_day.not_alarm{
+    background-color: #f00;
+    border: 1px solid yellow;
+}
