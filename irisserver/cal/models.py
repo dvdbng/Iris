@@ -3,7 +3,6 @@ from django.core.exceptions import ValidationError
 
 colors = (
     "#3e6958",
-    "#705050",
     "#60b48a",
     "#dfaf8f",
     "#9ab9d7",
@@ -23,7 +22,7 @@ colors = (
 class AlarmType(models.Model):
     name = models.CharField(max_length=35)
     wakeup = models.BooleanField()
-    def_time = models.TimeField(null=True)
+    def_time = models.TimeField(null=True,blank=True)
     preptime_min = models.IntegerField()
     preptime_max = models.IntegerField()
     def __json__(self):
@@ -40,11 +39,14 @@ class AlarmType(models.Model):
 
 class Alarm(models.Model):
     date = models.DateField()
-    time = models.TimeField(null=True)
+    time = models.TimeField(null=True,blank=True)
     type = models.ForeignKey(AlarmType)
     def clean(self):
         if self.time is None and ((self.type is None) or (self.type.def_time is None)):
             raise ValidationError('No time specified')
+        if self.type is not None and self.type.wakeup and len(Alarm.objects.filter(date=self.date,type__wakeup=True).exclude(pk=self.pk)) > 0:
+            raise ValidationError('Multiple wakeup alarms')
+
     def color(self):
         if self.type is not None:
             return colors[self.type.pk%len(colors)]
@@ -63,6 +65,8 @@ class Alarm(models.Model):
             return self.time
         else:
             return self.type.def_time
+    def is_wakeup(self):
+        return self.type and self.type.wakeup
 
     def __unicode__(self):
         res = self.get_time().strftime("%H:%M")
