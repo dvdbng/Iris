@@ -32,6 +32,10 @@ ADMIN_MEDIA_PREFIX = '/static/admin/'
 
 STATICFILES_DIRS = ()
 
+DATE_INPUT_FORMATS = (
+    ('%d-%m-%Y', '%d/%m/%Y', '%d/%m/%y',)
+)
+
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',

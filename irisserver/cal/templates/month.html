@@ -7,14 +7,15 @@
     {% for week in calendar %}
         <tr>
             {% for day in week %}
-            <td class="cal_day {% if not day.in_month %}not_{% endif %}in_month {% if not day.event %}not_{% endif %}alarm" {%if day.event%}style="background-color: {{day.event.color}};"{%endif%}>
-                    <div class="cal_date">{{ day.day|date:"j" }}</div>
-                    <div>
-                        {% if day.event %}
-                            {{day.event}}
-                        {%else%}
+            <td class="cal_day {% if not day.wakeup %}not_{% endif %}alarm" {%if day.wakeup %}style="background-color: {{day.wakeup.color}};"{%endif%}>
+                    <div class="cal_date">{{ day.day|date:"d" }}</div>
+                    <div class="cal_alarms">
+                        {% for alarm in day.alarms %}
+                            <a class="cal_alarm {% if not alarm == day.wakeup %}not_{%endif%}wakeup" href="/admin/cal/alarm/{{alarm.pk}}">{{alarm}}</a>
+                        {% empty %}
                             No alarm!
-                        {% endif %}
+                        {% endfor %}
+                            <a class="cal_add_alarm" href="/admin/cal/alarm/add/?date={{day.day|date:"d-m-Y"}}">Add new</a>
                     </div>
                 </td>
             {% endfor %}

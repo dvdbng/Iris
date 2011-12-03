@@ -3,14 +3,18 @@
 }
 
 .cal_day{
-    width:70px;
-    height: 70px;
-    vertical-align: center;
-    text-align: center;
+    width:130px;
+    height: 130px;
 
     background-color: #c585ff;
     cursor: pointer;
-
+    vertical-align: top;
+}
+.cal_date{
+    float:right;
+    background-color: rgba(0,0,0,0.5);
+    color: #fff;
+    padding: 1px 3px;
 }
 
 .cal_day.not_alarm{
@@ -22,6 +26,9 @@
     border: 1px solid #ccc;
     background: #fff;
     color: #ccc;
+}
+.wakeup{
+    color: #062731;
 }
 
 h2{

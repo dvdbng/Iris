@@ -6,54 +6,45 @@ from cal.models import Alarm
 register = template.Library()
 
 
-from datetime import date, timedelta
+import datetime
 
-def get_last_day_of_month(year, month):
-    if (month == 12):
-        year += 1
-        month = 1
-    else:
-        month += 1
-    return date(year, month, 1) - timedelta(1)
+CALENDAR_LENGTH = 90
 
+def calendar():
+    today = datetime.date.today()
+    start = today - datetime.timedelta(today.weekday())
+    end = start + datetime.timedelta(CALENDAR_LENGTH)
 
-def month_cal(year, month):
-    event_list = Alarm.objects.filter(date__year=year, date__month=month)
-
-    first_day_of_month = date(year, month, 1)
-    last_day_of_month = get_last_day_of_month(year, month)
-    first_day_of_calendar = first_day_of_month - timedelta(first_day_of_month.weekday())
-    last_day_of_calendar = last_day_of_month + timedelta(7 - last_day_of_month.weekday())
+    alarms = Alarm.objects.filter(date__gte=start,date__lt=end).order_by("date","time")
+    alarm_i = 0
 
     month_cal = []
     week = []
     week_headers = []
 
-    i = 0
-    day = first_day_of_calendar
-    while day <= last_day_of_calendar:
+    for i in range(CALENDAR_LENGTH):
+        day = start + datetime.timedelta(i)
         if i < 7:
             week_headers.append(day)
+
         cal_day = {}
         cal_day['day'] = day
-        cal_day['event'] = False
-        for event in event_list:
-            if day == event.date:
-                cal_day['event'] = event 
 
-        if day.month == month:
-            cal_day['in_month'] = True
-        else:
-            cal_day['in_month'] = False
+        cal_day['alarms'] = []
+        while alarm_i < len(alarms) and alarms[alarm_i].date == day:
+            if alarms[alarm_i].is_wakeup():
+                cal_day["wakeup"] = alarms[alarm_i]
+            cal_day['alarms'].append(alarms[alarm_i])
+            alarm_i += 1
+
         week.append(cal_day)
+
         if day.weekday() == 6:
             month_cal.append(week)
             week = []
-        i += 1
-        day += timedelta(1)
 
     return {'calendar': month_cal, 'headers': week_headers}
 
-register.inclusion_tag('month.html')(month_cal)
+register.inclusion_tag('month.html')(calendar)
 
 
