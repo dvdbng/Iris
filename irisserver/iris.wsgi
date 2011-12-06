@@ -1,7 +1,7 @@
 import os
 import sys
 
-sys.path.append("/var/django/Iris/irisserver/")
+sys.path.append("/var/django/Iris/")
 os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
 
 import django.core.handlers.wsgi
