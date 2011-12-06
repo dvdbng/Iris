@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.exceptions import ValidationError
+import datetime
 
 colors = (
     "#3e6958",
@@ -18,6 +19,14 @@ colors = (
     "#93E1E3",
     "#EEEEEC",
 )
+
+def to_json(obj):
+    if obj is None:
+        return None
+    elif type(obj) == datetime.date:
+        return [obj.day,obj.month,obj.year]
+    elif type(obj) == datetime.time:
+        return [obj.hour,obj.second]
 
 class AlarmType(models.Model):
     name = models.CharField(max_length=35)
@@ -56,8 +65,8 @@ class Alarm(models.Model):
     def __json__(self):
         return {
             "id":self.pk,
-            "date":self.date,
-            "time":self.time,
+            "date":to_json(self.date),
+            "time":to_json(self.time),
             "type":self.type.pk
         }
     def get_time(self):

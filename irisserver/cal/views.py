@@ -3,7 +3,7 @@ import utils
 
 @utils.jsonview
 def json(request):
-    return [x.__json__() for x in Alarms.models.all()]
+    return [x.__json__() for x in Alarm.objects.all()]
 
 @utils.irisview
 def index(request):
